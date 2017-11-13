@@ -12,6 +12,7 @@ class Pacman {
         this.increment = 4.5;
         this.intention = null;
         this.direction = null;
+        this.score = 0;
     }
     draw(){
         fill('#FFFF00');
@@ -36,38 +37,48 @@ class Pacman {
         this.update();
     }
     update(){
-        if(!(this.x % this.scale) && !(this.y % this.scale) && this.intention){
-            if(field.ask(this.x, this.y).allowed.includes(this.intention)){
-                switch (this.intention){
-                    case "UP":
-                        this.speed = [0, -1];
-                        break;
-                    case "DOWN":
-                        this.speed = [0, 1];
-                        break;
-                    case "RIGHT":
-                        this.speed = [1, 0];
-                        break;
-                    case "LEFT":
-                        this.speed = [-1, 0];
-                        break;
-                }
-                this.direction = this.intention;
-                this.intention = null;
-            }
-        }
-        if(!(this.x % this.scale) && !(this.y % this.scale)){
+        if(!(this.x % this.r) && !(this.y % this.r)){
             const portals = field.portal();
-            const portalIndex = portals.findIndex((el) => el[0] === this.x && el[1] === this.y)
+            const portalIndex = portals.findIndex((el) => el[0] === this.x && el[1] === this.y);
+            const chomp = field.chomp(this.x, this.y);
+            if(chomp){
+                if(chomp.type === "Dot"){
+                    this.score++;
+                }else{
+                    let speedup = frameRate() + 10;
+                    frameRate(speedup);
+                }
+
+            }
             if(!!~portalIndex){
                 const exitPortal = portals[Number(!portalIndex)];
                 this.x = exitPortal[0];
                 this.y = exitPortal[1];
             }
-        }
-        if(!(this.x % 10) && !(this.y % 10) && !(field.ask(this.x, this.y).allowed.includes(this.direction))){
-            this.direction = null;
-            this.speed = [0, 0];
+            if(this.intention){
+                if(field.ask(this.x, this.y).allowed.includes(this.intention)){
+                    switch (this.intention){
+                        case "UP":
+                            this.speed = [0, -1];
+                            break;
+                        case "DOWN":
+                            this.speed = [0, 1];
+                            break;
+                        case "RIGHT":
+                            this.speed = [1, 0];
+                            break;
+                        case "LEFT":
+                            this.speed = [-1, 0];
+                            break;
+                    }
+                    this.direction = this.intention;
+                    this.intention = null;
+                }
+            }
+            if(!(field.ask(this.x, this.y).allowed.includes(this.direction))){
+                this.direction = null;
+                this.speed = [0, 0];
+            }
         }
         if(this.jawWidth === 0){
             this.opening = false;
@@ -97,7 +108,6 @@ class Pacman {
             &&
             el[1] < yBoundary[1]
         );
-        console.log(!~portalIndex);
         if(!~portalIndex){
             this.intention = DIR;
         }

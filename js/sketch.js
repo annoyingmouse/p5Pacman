@@ -6,7 +6,7 @@ const offsetY = 15;
 function setup() {
     createCanvas(600, 400);
     angleMode(DEGREES);
-    frameRate(24);
+    frameRate(20);
     pacman = new Pacman(offsetX, offsetY, scale);
     field = new Field(offsetX, offsetY, `
 ╔════════════╦════════════╗

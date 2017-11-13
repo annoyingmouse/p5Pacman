@@ -14,7 +14,7 @@ class Field {
         this.drawLines("#2424ff", 7);
         this.drawLines("#246dff", 5);
         this.drawLines("#000049", 3);
-        this.drawGrid();
+        //this.drawGrid();
     }
     getScale(){
         return this.scale;
@@ -28,17 +28,17 @@ class Field {
     drawGrid(){
         this.rows.forEach((row, rowIndex, rowArray) => {
             const columns = row.split("");
-        columns.forEach((column, columnIndex, colArray) => {
-            stroke("#ff0000");
-            strokeWeight(1);
-            noFill();
-            rect(
-                ((columnIndex + 1) * this.scale) + this.x,
-                ((rowIndex + 1) * this.scale) + this.y,
-                this.scale,
-                this.scale);
+            columns.forEach((column, columnIndex, colArray) => {
+                stroke("#ff0000");
+                strokeWeight(1);
+                noFill();
+                rect(
+                    ((columnIndex + 1) * this.scale) + this.x,
+                    ((rowIndex + 1) * this.scale) + this.y,
+                    this.scale,
+                    this.scale);
+            });
         });
-    });
     }
     generateRoutes(){
         this.rows.forEach((row, rowIndex, rowArray) => {
@@ -49,40 +49,39 @@ class Field {
                     "y": (((rowIndex + 1) * this.scale) + (this.scale / 2)) + this.y,
                     "allowed": []
                 };
-            if(columnIndex){
-                const leftCell = colArray[columnIndex - 1];
-                if(leftCell === " " || leftCell === "X" || leftCell === "•" || leftCell === "*"){
-                    directions.allowed.push("LEFT");
+                if(columnIndex){
+                    const leftCell = colArray[columnIndex - 1];
+                    if(leftCell === " " || leftCell === "X" || leftCell === "•" || leftCell === "*"){
+                        directions.allowed.push("LEFT");
+                    }
                 }
-            }
-            if(columnIndex < (colArray.length - 1)){
-                const rightCell = colArray[columnIndex + 1];
-                if(rightCell === " " || rightCell === "X" || rightCell === "•" || rightCell === "*"){
-                    directions.allowed.push("RIGHT");
+                if(columnIndex < (colArray.length - 1)){
+                    const rightCell = colArray[columnIndex + 1];
+                    if(rightCell === " " || rightCell === "X" || rightCell === "•" || rightCell === "*"){
+                        directions.allowed.push("RIGHT");
+                    }
                 }
-            }
-            if(rowIndex){
-                const upCell = rowArray[rowIndex - 1][columnIndex];
-                if(upCell === " " || upCell === "X" || upCell === "•" || upCell === "*"){
-                    directions.allowed.push("UP");
+                if(rowIndex){
+                    const upCell = rowArray[rowIndex - 1][columnIndex];
+                    if(upCell === " " || upCell === "X" || upCell === "•" || upCell === "*"){
+                        directions.allowed.push("UP");
+                    }
                 }
-            }
-            if(rowIndex < (rowArray.length - 1)){
-                const downCell = rowArray[rowIndex + 1][columnIndex];
-                if(downCell === " " || downCell === "X" || downCell === "•" || downCell === "*"){
-                    directions.allowed.push("DOWN");
+                if(rowIndex < (rowArray.length - 1)){
+                    const downCell = rowArray[rowIndex + 1][columnIndex];
+                    if(downCell === " " || downCell === "X" || downCell === "•" || downCell === "*"){
+                        directions.allowed.push("DOWN");
+                    }
                 }
-            }
-            if(column === "X"){
-                this.portals.push([
-                    (((columnIndex + 1) * this.scale) + (this.scale / 2)) + this.x,
-                    (((rowIndex + 1) * this.scale) + (this.scale / 2)) + this.y
-                ]);
-            }
-            this.permittedRoutes.push(directions);
+                if(column === "X"){
+                    this.portals.push([
+                        (((columnIndex + 1) * this.scale) + (this.scale / 2)) + this.x,
+                        (((rowIndex + 1) * this.scale) + (this.scale / 2)) + this.y
+                    ]);
+                }
+                this.permittedRoutes.push(directions);
+            });
         });
-    });
-        console.log(this.permittedRoutes);
     }
     generateDots(){
         this.rows.forEach((row, rowIndex, rowArray) => {
@@ -187,5 +186,21 @@ class Field {
                 ellipse(dot.x, dot.y, 2, 2);
             }
         });
+    }
+    chomp(x, y){
+        let dotIndex = null;
+        this.dots.forEach((dot, index) => {
+            if(dot.x === x && dot.y === y) {
+                dotIndex = index;
+            }
+        });
+        console.log(dotIndex);
+        if(dotIndex !== null){
+            const tempObject = Object.assign({}, this.dots[dotIndex]);
+            this.dots.splice(dotIndex, 1);
+            return tempObject;
+        }else{
+            return null;
+        }
     }
 }
