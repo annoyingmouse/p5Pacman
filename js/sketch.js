@@ -3,10 +3,11 @@ let field = null;
 const scale = 15;
 const offsetX = 45;
 const offsetY = 15;
+let frames = 30;
 function setup() {
     createCanvas(600, 400);
     angleMode(DEGREES);
-    frameRate(20);
+    frameRate(frames);
     pacman = new Pacman(offsetX, offsetY, scale);
     field = new Field(offsetX, offsetY, `
 ╔════════════╦════════════╗

@@ -194,7 +194,6 @@ class Field {
                 dotIndex = index;
             }
         });
-        console.log(dotIndex);
         if(dotIndex !== null){
             const tempObject = Object.assign({}, this.dots[dotIndex]);
             this.dots.splice(dotIndex, 1);

@@ -13,6 +13,7 @@ class Pacman {
         this.intention = null;
         this.direction = null;
         this.score = 0;
+        this.frames = 0;
     }
     draw(){
         fill('#FFFF00');
@@ -37,7 +38,16 @@ class Pacman {
         this.update();
     }
     update(){
+        if(this.frames){
+            let speedup = frames + this.frames;
+            frameRate(speedup);
+            this.frames = this.frames - 0.01;
+            if(this.frames < 0){
+                this.frames = 0;
+            }
+        }
         if(!(this.x % this.r) && !(this.y % this.r)){
+            console.log(this.frames);
             const portals = field.portal();
             const portalIndex = portals.findIndex((el) => el[0] === this.x && el[1] === this.y);
             const chomp = field.chomp(this.x, this.y);
@@ -45,8 +55,7 @@ class Pacman {
                 if(chomp.type === "Dot"){
                     this.score++;
                 }else{
-                    let speedup = frameRate() + 10;
-                    frameRate(speedup);
+                    this.frames += 10;
                 }
 
             }
