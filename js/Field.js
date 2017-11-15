@@ -9,23 +9,29 @@ class Field {
         this.generateRoutes();
         this.dots = [];
         this.generateDots();
+        this.lines = "═║╔╗╚╝╦╩╠╣";
     }
-    draw(){
+
+    draw() {
         this.drawLines("#2424ff", 7);
         this.drawLines("#246dff", 5);
         this.drawLines("#000049", 3);
         //this.drawGrid();
     }
-    getScale(){
+
+    getScale() {
         return this.scale;
     }
-    ask(x, y){
+
+    ask(x, y) {
         return this.permittedRoutes.find((el) => el.x === x && el.y === y);
     }
-    portal(){
+
+    portal() {
         return this.portals;
     }
-    drawGrid(){
+
+    drawGrid() {
         this.rows.forEach((row, rowIndex, rowArray) => {
             const columns = row.split("");
             columns.forEach((column, columnIndex, colArray) => {
@@ -40,7 +46,8 @@ class Field {
             });
         });
     }
-    generateRoutes(){
+
+    generateRoutes() {
         this.rows.forEach((row, rowIndex, rowArray) => {
             const columns = row.split("");
             columns.forEach((column, columnIndex, colArray) => {
@@ -49,31 +56,31 @@ class Field {
                     "y": (((rowIndex + 1) * this.scale) + (this.scale / 2)) + this.y,
                     "allowed": []
                 };
-                if(columnIndex){
+                if (columnIndex) {
                     const leftCell = colArray[columnIndex - 1];
-                    if(leftCell === " " || leftCell === "X" || leftCell === "•" || leftCell === "*"){
+                    if (leftCell === " " || leftCell === "X" || leftCell === "•" || leftCell === "*") {
                         directions.allowed.push("LEFT");
                     }
                 }
-                if(columnIndex < (colArray.length - 1)){
+                if (columnIndex < (colArray.length - 1)) {
                     const rightCell = colArray[columnIndex + 1];
-                    if(rightCell === " " || rightCell === "X" || rightCell === "•" || rightCell === "*"){
+                    if (rightCell === " " || rightCell === "X" || rightCell === "•" || rightCell === "*") {
                         directions.allowed.push("RIGHT");
                     }
                 }
-                if(rowIndex){
+                if (rowIndex) {
                     const upCell = rowArray[rowIndex - 1][columnIndex];
-                    if(upCell === " " || upCell === "X" || upCell === "•" || upCell === "*"){
+                    if (upCell === " " || upCell === "X" || upCell === "•" || upCell === "*") {
                         directions.allowed.push("UP");
                     }
                 }
-                if(rowIndex < (rowArray.length - 1)){
+                if (rowIndex < (rowArray.length - 1)) {
                     const downCell = rowArray[rowIndex + 1][columnIndex];
-                    if(downCell === " " || downCell === "X" || downCell === "•" || downCell === "*"){
+                    if (downCell === " " || downCell === "X" || downCell === "•" || downCell === "*") {
                         directions.allowed.push("DOWN");
                     }
                 }
-                if(column === "X"){
+                if (column === "X") {
                     this.portals.push([
                         (((columnIndex + 1) * this.scale) + (this.scale / 2)) + this.x,
                         (((rowIndex + 1) * this.scale) + (this.scale / 2)) + this.y
@@ -83,7 +90,8 @@ class Field {
             });
         });
     }
-    generateDots(){
+
+    generateDots() {
         this.rows.forEach((row, rowIndex, rowArray) => {
             const columns = row.split("");
             columns.forEach((column, columnIndex, colArray) => {
@@ -91,18 +99,19 @@ class Field {
                     "x": (((columnIndex + 1) * this.scale) + (this.scale / 2)) + this.x,
                     "y": (((rowIndex + 1) * this.scale) + (this.scale / 2)) + this.y
                 };
-                if(column === "•"){
+                if (column === "•") {
                     dot.type = "Dot";
                     this.dots.push(dot);
                 }
-                if(column === "*"){
+                if (column === "*") {
                     dot.type = "Pill";
                     this.dots.push(dot);
                 }
             });
         });
     }
-    drawLines(colour, lineWidth){
+
+    drawLines(colour, lineWidth) {
         this.rows.forEach((row, rowIndex, rowArray) => {
             const columns = row.split("");
             columns.forEach((column, columnIndex, colArray) => {
@@ -119,12 +128,14 @@ class Field {
                 stroke(colour);
                 strokeWeight(lineWidth);
                 strokeCap(ROUND);
-                switch (column){
+                switch (column) {
                     case "═":
-                        if (colArray[columnIndex - 1].charCodeAt(0) === 32) {
+                        const cellLeft = colArray[columnIndex - 1];
+                        if (this.lines.indexOf(cellLeft) === -1) {
                             line(x[1], y[1], x[2], y[1]);
                         } else {
-                            if(colArray[columnIndex + 1].charCodeAt(0) === 32){
+                            const cellRight = colArray[columnIndex + 1];
+                            if (this.lines.indexOf(cellRight) === -1) {
                                 line(x[0], y[1], x[1], y[1]);
                             } else {
                                 line(x[0], y[1], x[2], y[1]);
@@ -132,10 +143,12 @@ class Field {
                         }
                         break;
                     case "║":
-                        if (rowArray[rowIndex - 1][columnIndex].charCodeAt(0) === 32) {
+                        const cellAbove = rowArray[rowIndex - 1][columnIndex];
+                        if (this.lines.indexOf(cellAbove) === -1) {
                             line(x[1], y[1], x[1], y[2]);
                         } else {
-                            if (rowArray[rowIndex + 1][columnIndex].charCodeAt(0) === 32) {
+                            const cellBeneath = rowArray[rowIndex + 1][columnIndex];
+                            if (this.lines.indexOf(cellBeneath) === -1) {
                                 line(x[1], y[0], x[1], y[1]);
                             } else {
                                 line(x[1], y[0], x[1], y[2]);
@@ -180,25 +193,24 @@ class Field {
         this.dots.forEach((dot, dotIndex, dotArray) => {
             fill('#FFB897');
             noStroke();
-            if(dot.type !== "Dot"){
+            if (dot.type !== "Dot") {
                 ellipse(dot.x, dot.y, 4, 4);
-            }else{
+            } else {
                 ellipse(dot.x, dot.y, 2, 2);
             }
         });
     }
-    chomp(x, y){
+
+    chomp(x, y) {
         let dotIndex = null;
         this.dots.forEach((dot, index) => {
-            if(dot.x === x && dot.y === y) {
+            if (dot.x === x && dot.y === y) {
                 dotIndex = index;
             }
         });
-        if(dotIndex !== null){
-            const tempObject = Object.assign({}, this.dots[dotIndex]);
-            this.dots.splice(dotIndex, 1);
-            return tempObject;
-        }else{
+        if (dotIndex !== null) {
+            return this.dots.splice(dotIndex, 1)[0];
+        } else {
             return null;
         }
     }

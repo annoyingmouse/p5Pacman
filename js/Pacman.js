@@ -15,21 +15,22 @@ class Pacman {
         this.score = 0;
         this.frames = 0;
     }
-    draw(){
+
+    draw() {
         fill('#FFFF00');
         noStroke();
-        if(this.jawWidth === 0){
+        if (this.jawWidth === 0) {
             ellipse(this.x, this.y, this.r * 2, this.r * 2);
         } else {
             push();
             translate(this.x, this.y);
-            if(this.direction === "UP"){
+            if (this.direction === "UP") {
                 rotate(270);
             }
-            if(this.direction === "DOWN"){
+            if (this.direction === "DOWN") {
                 rotate(90);
             }
-            if(this.direction === "LEFT"){
+            if (this.direction === "LEFT") {
                 rotate(180);
             }
             arc(0, 0, this.r * 2, this.r * 2, this.jawWidth, -Math.abs(this.jawWidth), PIE);
@@ -37,36 +38,35 @@ class Pacman {
         }
         this.update();
     }
-    update(){
-        if(this.frames){
+
+    update() {
+        if (this.frames) {
             let speedup = frames + this.frames;
             frameRate(speedup);
             this.frames = this.frames - 0.01;
-            if(this.frames < 0){
+            if (this.frames < 0) {
                 this.frames = 0;
             }
         }
-        if(!(this.x % this.r) && !(this.y % this.r)){
-            console.log(this.frames);
+        if (!(this.x % this.r) && !(this.y % this.r)) {
             const portals = field.portal();
             const portalIndex = portals.findIndex((el) => el[0] === this.x && el[1] === this.y);
-            const chomp = field.chomp(this.x, this.y);
-            if(chomp){
-                if(chomp.type === "Dot"){
+            let chomp = field.chomp(this.x, this.y);
+            if (chomp) {
+                if (chomp.type === "Dot") {
                     this.score++;
-                }else{
+                } else {
                     this.frames += 10;
                 }
-
             }
-            if(!!~portalIndex){
+            if (!!~portalIndex) {
                 const exitPortal = portals[Number(!portalIndex)];
                 this.x = exitPortal[0];
                 this.y = exitPortal[1];
             }
-            if(this.intention){
-                if(field.ask(this.x, this.y).allowed.includes(this.intention)){
-                    switch (this.intention){
+            if (this.intention) {
+                if (field.ask(this.x, this.y).allowed.includes(this.intention)) {
+                    switch (this.intention) {
                         case "UP":
                             this.speed = [0, -1];
                             break;
@@ -84,26 +84,27 @@ class Pacman {
                     this.intention = null;
                 }
             }
-            if(!(field.ask(this.x, this.y).allowed.includes(this.direction))){
+            if (!(field.ask(this.x, this.y).allowed.includes(this.direction))) {
                 this.direction = null;
                 this.speed = [0, 0];
             }
         }
-        if(this.jawWidth === 0){
+        if (this.jawWidth === 0) {
             this.opening = false;
         }
-        if(this.jawWidth === 45){
+        if (this.jawWidth === 45) {
             this.opening = true;
         }
-        if(this.opening){
+        if (this.opening) {
             this.jawWidth -= this.increment;
-        }else{
+        } else {
             this.jawWidth += this.increment;
         }
         this.x = this.x + this.speed[0];
         this.y = this.y + this.speed[1];
 
     }
+
     dir(DIR) {
         const portals = field.portal();
         const xBoundary = [this.x - this.scale, this.x + this.scale];
@@ -117,7 +118,7 @@ class Pacman {
             &&
             el[1] < yBoundary[1]
         );
-        if(!~portalIndex){
+        if (!~portalIndex) {
             this.intention = DIR;
         }
     }
