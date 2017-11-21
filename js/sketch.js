@@ -1,5 +1,9 @@
 let pacman = null;
 let field = null;
+let Blinky = null; // #ff0000/#2121ff
+let Pinky = null; // #ffb8ff/#2121ff
+let Inky = null; // #00ffff/#2121ff
+let Clyde = null; // #ffb851/#2121ff
 const scale = 15;
 const offsetX = 45;
 const offsetY = 15;
