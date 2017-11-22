@@ -194,7 +194,7 @@ class Field {
             fill('#FFB897');
             noStroke();
             if (dot.type !== "Dot") {
-                ellipse(dot.x, dot.y, 4, 4);
+                ellipse(dot.x, dot.y, 6, 6 );
             } else {
                 ellipse(dot.x, dot.y, 2, 2);
             }

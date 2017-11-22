@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Ghost</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.12/p5.js"></script>
+    </head>
+    <body>
+        <script>
+            // http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior
+            const scale = 5;
+            const x = 100;
+            const y = 100;
+            let frame = true;
+            let direction = "LEFT";
+
+            function setup() {
+                createCanvas(600, 400);
+                frameRate(2);
+            }
+
+            function draw() {
+                background("#030002");
+                noStroke();
+                fill("#ffb851"); // Body
+                let row = y - (7 * scale); // 1
+                rect(x - (2 * scale), row, 4 * scale, scale);
+                row += scale; // 2
+                rect(x - (4 * scale), row, 8 * scale, scale);
+                row += scale; //3
+                rect(x - (5 * scale), row, 10 * scale, scale);
+                row += scale; // 4, 5, 6
+                rect(x - (6 * scale), row, 12 * scale, 3 * scale);
+                row += (3 * scale); // 7, 8, 9, 10, 11, 12
+                rect(x - (7 * scale), row, 14 * scale, 6 * scale);
+                row += (6 * scale); // 13
+                if (frame) {
+                    rect(x - (7 * scale), row, 2 * scale, scale);
+                    rect(x - (4 * scale), row, 3 * scale, scale);
+                    rect(x + scale, row, 3 * scale, scale);
+                    rect(x + (5 * scale), row, 2 * scale, scale);
+                } else {
+                    rect(x - (7 * scale), row, 4 * scale, scale);
+                    rect(x - (2 * scale), row, 4 * scale, scale);
+                    rect(x + (3 * scale), row, 4 * scale, scale);
+                }
+                row += scale; // 14
+                if (frame) {
+                    rect(x - (7 * scale), row, scale, scale);
+                    rect(x - (3 * scale), row, 2 * scale, scale);
+                    rect(x + scale, row, 2 * scale, scale);
+                    rect(x + (6 * scale), row, scale, scale);
+                } else {
+                    rect(x - (7 * scale), row, 3 * scale, scale);
+                    rect(x - scale, row, 2 * scale, scale);
+                    rect(x + (4 * scale), row, 3 * scale, scale);
+                }
+                if(direction === "RIGHT"){
+                    fill("#dedeff"); // Whites
+                    row = y - (4 * scale); // 4
+                    rect(x - (3 * scale), row, 2 * scale, scale);
+                    rect(x + (3 * scale), row, 2 * scale, scale);
+                    row += scale; // 5
+                    rect(x - (4 * scale), row, 4 * scale, 3 * scale);
+                    rect(x + (2 * scale), row, 4 * scale, 3 * scale);
+                    row += (3 * scale);
+                    rect(x - (3 * scale), row, 2 * scale, scale);
+                    rect(x + (3 * scale), row, 2 * scale, scale);
+                    fill("#2121ff"); // Pupils
+                    row = y - (2 * scale); // 5
+                    rect(x - (2 * scale), row, 2 * scale, 2 * scale);
+                    rect(x + (4 * scale), row, 2 * scale, 2 * scale);
+                }
+                if(direction === "LEFT"){
+                    fill("#dedeff"); // Whites
+                    row = y - (4 * scale); // 4
+                    rect(x - (5 * scale), row, 2 * scale, scale);
+                    rect(x + scale, row, 2 * scale, scale);
+                    row += scale; // 5
+                    rect(x - (6 * scale), row, 4 * scale, 3 * scale);
+                    rect(x, row, 4 * scale, 3 * scale);
+                    row += (3 * scale);
+                    rect(x - (5 * scale), row, 2 * scale, scale);
+                    rect(x + scale, row, 2 * scale, scale);
+                    fill("#2121ff"); // Pupils
+                    row = y - (2 * scale); // 5
+                    rect(x - (6 * scale), row, 2 * scale, 2 * scale);
+                    rect(x , row, 2 * scale, 2 * scale);
+                }
+                if(direction === "DOWN"){
+                    fill("#dedeff"); // Whites
+                    row = y - (3 * scale); // 4
+                    rect(x - (4 * scale), row, 2 * scale, scale);
+                    rect(x + (2 * scale), row, 2 * scale, scale);
+                    row += scale; // 5
+                    rect(x - (5 * scale), row, 4 * scale, 3 * scale);
+                    rect(x + scale, row, 4 * scale, 3 * scale);
+                    row += (3 * scale);
+                    rect(x - (4 * scale), row, 2 * scale, scale);
+                    rect(x + (2 * scale), row, 2 * scale, scale);
+                    fill("#2121ff"); // Pupils
+                    row = y; // 5
+                    rect(x - (4 * scale), row, 2 * scale, 2 * scale);
+                    rect(x + (2 * scale), row, 2 * scale, 2 * scale);
+                }
+                if(direction === "UP"){
+                    fill("#dedeff"); // Whites
+                    row = y - (6 * scale); // 4
+                    rect(x - (4 * scale), row, 2 * scale, scale);
+                    rect(x + (2 * scale), row, 2 * scale, scale);
+                    row += scale; // 5
+                    rect(x - (5 * scale), row, 4 * scale, 3 * scale);
+                    rect(x + scale, row, 4 * scale, 3 * scale);
+                    row += (3 * scale);
+                    rect(x - (4 * scale), row, 2 * scale, scale);
+                    rect(x + (2 * scale), row, 2 * scale, scale);
+                    fill("#2121ff"); // Pupils
+                    row = y - (6 * scale); // 5
+                    rect(x - (4 * scale), row, 2 * scale, 2 * scale);
+                    rect(x + (2 * scale), row, 2 * scale, 2 * scale);
+                }
+
+
+
+                frame = !frame;
+            }
+        </script>
+    </body>
+</html>

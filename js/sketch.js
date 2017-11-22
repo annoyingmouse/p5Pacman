@@ -13,6 +13,11 @@ function setup() {
     angleMode(DEGREES);
     frameRate(frames);
     pacman = new Pacman(offsetX, offsetY, scale);
+    Blinky = new Ghost(offsetX, offsetY, scale, "BLINKY");
+    Pinky = new Ghost(offsetX, offsetY, scale, "PINKY");
+    Inky = new Ghost(offsetX, offsetY, scale, "INKY");
+    Clyde = new Ghost(offsetX, offsetY, scale, "CLYDE");
+
     field = new Field(offsetX, offsetY, `
 ╔════════════╦════════════╗
 ║••••••••••••║••••••••••••║
@@ -41,6 +46,10 @@ function draw() {
     background("#030002");
     field.draw();
     pacman.draw();
+    Blinky.draw();
+    Pinky.draw();
+    Inky.draw();
+    Clyde.draw();
 }
 function keyPressed() {
     if (keyCode === UP_ARROW) {

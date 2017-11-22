@@ -1,7 +1,5 @@
 class Pacman {
     constructor(offsetX, offsetY, scale) {
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
         this.r = scale / 2;
         this.x = (scale * 14) + offsetX + this.r;
         this.y = (scale * 16) + offsetY + this.r;
