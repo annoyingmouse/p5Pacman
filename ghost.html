@@ -8,117 +8,259 @@
     <body>
         <script>
             // http://gameinternals.com/post/2072558330/understanding-pac-man-ghost-behavior
-            const scale = 5;
+            const scale = 1;
             const x = 100;
             const y = 100;
             let frame = true;
-            let direction = "LEFT";
+            let direction = "DOWN";
 
+            function drawBody(x, y, colour, odd){
+                background("#030002");
+                noStroke();
+                fill(colour);
+                beginShape();
+                vertex(x+1, y);
+                vertex(x+1, y-8);
+                vertex(x+2, y-8);
+                vertex(x+2, y-11);
+                vertex(x+3, y-11);
+                vertex(x+3, y-12);
+                vertex(x+3, y-12);
+                vertex(x+3, y-13);
+                vertex(x+5, y-13);
+                vertex(x+5, y-14);
+                vertex(x+9, y-14);
+                vertex(x+9, y-13);
+                vertex(x+11, y-13);
+                vertex(x+11, y-12);
+                vertex(x+12, y-12);
+                vertex(x+12, y-11);
+                vertex(x+13, y-11);
+                vertex(x+13, y-8);
+                vertex(x+14, y-8);
+                vertex(x+14, y);
+                if(odd){
+                    vertex(x+13, y );
+                    vertex(x+13, y-1 );
+                    vertex(x+12, y-1 );
+                    vertex(x+12, y-2 );
+                    vertex(x+11, y-2 );
+                    vertex(x+11, y-1 );
+                    vertex(x+10, y-1 );
+                    vertex(x+10, y);
+                    vertex(x+8, y);
+                    vertex(x+8, y-2);
+                    vertex(x+6, y-2);
+                    vertex(x+6, y);
+                    vertex(x+4, y);
+                    vertex(x+4, y-1);
+                    vertex(x+3, y-1);
+                    vertex(x+3, y-2);
+                    vertex(x+2, y-2);
+                    vertex(x+2, y-1);
+                    vertex(x+1, y-1);
+                    vertex(x+1, y);
+                }else{
+                    vertex(x+11, y);
+                    vertex(x+11, y-1);
+                    vertex(x+10, y-1);
+                    vertex(x+10, y-2);
+                    vertex(x+9, y-2);
+                    vertex(x+9, y-1);
+                    vertex(x+8, y-1);
+                    vertex(x+8, y);
+                    vertex(x+6, y);
+                    vertex(x+6, y-1);
+                    vertex(x+5, y-1);
+                    vertex(x+5, y-2);
+                    vertex(x+4, y-2);
+                    vertex(x+4, y-1);
+                    vertex(x+3, y-1);
+                    vertex(x+3, y);
+                }
+                endShape(CLOSE);
+            }
+            function drawEye(x, y, direction){
+                // Default is LEFT;
+                let whiteX = null,
+                    whiteY = null,
+                    pupilX = null,
+                    pupilY = null;
+                if(direction === "LEFT"){
+                    whiteX = 0;
+                    whiteY = 0;
+                    pupilX = 0;
+                    pupilY = 0;
+                }
+                if(direction === "RIGHT"){
+                    whiteX = 2;
+                    whiteY = 0;
+                    pupilX = 4;
+                    pupilY = 0;
+                }
+                if(direction === "UP"){
+                    whiteX = 1;
+                    whiteY = -2;
+                    pupilX = 2;
+                    pupilY = -4;
+                }
+                if(direction === "DOWN"){
+                    whiteX = 1;
+                    whiteY = 1;
+                    pupilX = 2;
+                    pupilY = 2;
+                }
+                fill("#dedeff");
+                beginShape();
+                vertex(x+1+whiteX, y-7+whiteY);
+                vertex(x+1+whiteX, y-10+whiteY);
+                vertex(x+2+whiteX, y-10+whiteY);
+                vertex(x+2+whiteX, y-11+whiteY);
+                vertex(x+4+whiteX, y-11+whiteY);
+                vertex(x+4+whiteX, y-10+whiteY);
+                vertex(x+5+whiteX, y-10+whiteY);
+                vertex(x+5+whiteX, y-7+whiteY);
+                vertex(x+4+whiteX, y-7+whiteY);
+                vertex(x+4+whiteX, y-6+whiteY);
+                vertex(x+2+whiteX, y-6+whiteY);
+                vertex(x+2+whiteX, y-7+whiteY);
+                endShape(CLOSE);
+                beginShape();
+                vertex(x+7+whiteX, y-7+whiteY);
+                vertex(x+7+whiteX, y-10+whiteY);
+                vertex(x+8+whiteX, y-10+whiteY);
+                vertex(x+8+whiteX, y-11+whiteY);
+                vertex(x+10+whiteX, y-11+whiteY);
+                vertex(x+10+whiteX, y-10+whiteY);
+                vertex(x+11+whiteX, y-10+whiteY);
+                vertex(x+11+whiteX, y-7+whiteY);
+                vertex(x+10+whiteX, y-7+whiteY);
+                vertex(x+10+whiteX, y-6+whiteY);
+                vertex(x+8+whiteX, y-6+whiteY);
+                vertex(x+8+whiteX, y-7+whiteY);
+                endShape(CLOSE);
+                fill("#2121ff");
+                rect(x+1+pupilX, y-9+pupilY, 2, 2);
+                rect(x+7+pupilX, y-9+pupilY, 2, 2);
+            }
             function setup() {
                 createCanvas(600, 400);
                 frameRate(2);
             }
 
             function draw() {
-                background("#030002");
-                noStroke();
-                fill("#ffb851"); // Body
-                let row = y - (7 * scale); // 1
-                rect(x - (2 * scale), row, 4 * scale, scale);
-                row += scale; // 2
-                rect(x - (4 * scale), row, 8 * scale, scale);
-                row += scale; //3
-                rect(x - (5 * scale), row, 10 * scale, scale);
-                row += scale; // 4, 5, 6
-                rect(x - (6 * scale), row, 12 * scale, 3 * scale);
-                row += (3 * scale); // 7, 8, 9, 10, 11, 12
-                rect(x - (7 * scale), row, 14 * scale, 6 * scale);
-                row += (6 * scale); // 13
-                if (frame) {
-                    rect(x - (7 * scale), row, 2 * scale, scale);
-                    rect(x - (4 * scale), row, 3 * scale, scale);
-                    rect(x + scale, row, 3 * scale, scale);
-                    rect(x + (5 * scale), row, 2 * scale, scale);
-                } else {
-                    rect(x - (7 * scale), row, 4 * scale, scale);
-                    rect(x - (2 * scale), row, 4 * scale, scale);
-                    rect(x + (3 * scale), row, 4 * scale, scale);
+                drawBody(20, 20, "#ffb851", frame);
+
+                if(direction === "LEFT") {
+                    drawEye(20, 20, direction);
                 }
-                row += scale; // 14
-                if (frame) {
-                    rect(x - (7 * scale), row, scale, scale);
-                    rect(x - (3 * scale), row, 2 * scale, scale);
-                    rect(x + scale, row, 2 * scale, scale);
-                    rect(x + (6 * scale), row, scale, scale);
-                } else {
-                    rect(x - (7 * scale), row, 3 * scale, scale);
-                    rect(x - scale, row, 2 * scale, scale);
-                    rect(x + (4 * scale), row, 3 * scale, scale);
+                if(direction === "RIGHT") {
+                    drawEye(20, 20, direction);
                 }
-                if(direction === "RIGHT"){
-                    fill("#dedeff"); // Whites
-                    row = y - (4 * scale); // 4
-                    rect(x - (3 * scale), row, 2 * scale, scale);
-                    rect(x + (3 * scale), row, 2 * scale, scale);
-                    row += scale; // 5
-                    rect(x - (4 * scale), row, 4 * scale, 3 * scale);
-                    rect(x + (2 * scale), row, 4 * scale, 3 * scale);
-                    row += (3 * scale);
-                    rect(x - (3 * scale), row, 2 * scale, scale);
-                    rect(x + (3 * scale), row, 2 * scale, scale);
-                    fill("#2121ff"); // Pupils
-                    row = y - (2 * scale); // 5
-                    rect(x - (2 * scale), row, 2 * scale, 2 * scale);
-                    rect(x + (4 * scale), row, 2 * scale, 2 * scale);
+                if(direction === "DOWN") {
+                    drawEye(20, 20, direction);
                 }
-                if(direction === "LEFT"){
-                    fill("#dedeff"); // Whites
-                    row = y - (4 * scale); // 4
-                    rect(x - (5 * scale), row, 2 * scale, scale);
-                    rect(x + scale, row, 2 * scale, scale);
-                    row += scale; // 5
-                    rect(x - (6 * scale), row, 4 * scale, 3 * scale);
-                    rect(x, row, 4 * scale, 3 * scale);
-                    row += (3 * scale);
-                    rect(x - (5 * scale), row, 2 * scale, scale);
-                    rect(x + scale, row, 2 * scale, scale);
-                    fill("#2121ff"); // Pupils
-                    row = y - (2 * scale); // 5
-                    rect(x - (6 * scale), row, 2 * scale, 2 * scale);
-                    rect(x , row, 2 * scale, 2 * scale);
+                if(direction === "UP") {
+                    drawEye(20, 20, direction);
                 }
-                if(direction === "DOWN"){
-                    fill("#dedeff"); // Whites
-                    row = y - (3 * scale); // 4
-                    rect(x - (4 * scale), row, 2 * scale, scale);
-                    rect(x + (2 * scale), row, 2 * scale, scale);
-                    row += scale; // 5
-                    rect(x - (5 * scale), row, 4 * scale, 3 * scale);
-                    rect(x + scale, row, 4 * scale, 3 * scale);
-                    row += (3 * scale);
-                    rect(x - (4 * scale), row, 2 * scale, scale);
-                    rect(x + (2 * scale), row, 2 * scale, scale);
-                    fill("#2121ff"); // Pupils
-                    row = y; // 5
-                    rect(x - (4 * scale), row, 2 * scale, 2 * scale);
-                    rect(x + (2 * scale), row, 2 * scale, 2 * scale);
-                }
-                if(direction === "UP"){
-                    fill("#dedeff"); // Whites
-                    row = y - (6 * scale); // 4
-                    rect(x - (4 * scale), row, 2 * scale, scale);
-                    rect(x + (2 * scale), row, 2 * scale, scale);
-                    row += scale; // 5
-                    rect(x - (5 * scale), row, 4 * scale, 3 * scale);
-                    rect(x + scale, row, 4 * scale, 3 * scale);
-                    row += (3 * scale);
-                    rect(x - (4 * scale), row, 2 * scale, scale);
-                    rect(x + (2 * scale), row, 2 * scale, scale);
-                    fill("#2121ff"); // Pupils
-                    row = y - (6 * scale); // 5
-                    rect(x - (4 * scale), row, 2 * scale, 2 * scale);
-                    rect(x + (2 * scale), row, 2 * scale, 2 * scale);
-                }
+
+
+//                let row = y - (7 * scale); // 1
+//                rect(x - (2 * scale), row, 4 * scale, scale);
+//                row += scale; // 2
+//                rect(x - (4 * scale), row, 8 * scale, scale);
+//                row += scale; //3
+//                rect(x - (5 * scale), row, 10 * scale, scale);
+//                row += scale; // 4, 5, 6
+//                rect(x - (6 * scale), row, 12 * scale, 3 * scale);
+//                row += (3 * scale); // 7, 8, 9, 10, 11, 12
+//                rect(x - (7 * scale), row, 14 * scale, 6 * scale);
+//                row += (6 * scale); // 13
+//                if (frame) {
+//                    rect(x - (7 * scale), row, 2 * scale, scale);
+//                    rect(x - (4 * scale), row, 3 * scale, scale);
+//                    rect(x + scale, row, 3 * scale, scale);
+//                    rect(x + (5 * scale), row, 2 * scale, scale);
+//                } else {
+//                    rect(x - (7 * scale), row, 4 * scale, scale);
+//                    rect(x - (2 * scale), row, 4 * scale, scale);
+//                    rect(x + (3 * scale), row, 4 * scale, scale);
+//                }
+//                row += scale; // 14
+//                if (frame) {
+//                    rect(x - (7 * scale), row, scale, scale);
+//                    rect(x - (3 * scale), row, 2 * scale, scale);
+//                    rect(x + scale, row, 2 * scale, scale);
+//                    rect(x + (6 * scale), row, scale, scale);
+//                } else {
+//                    rect(x - (7 * scale), row, 3 * scale, scale);
+//                    rect(x - scale, row, 2 * scale, scale);
+//                    rect(x + (4 * scale), row, 3 * scale, scale);
+//                }
+//                if(direction === "RIGHT"){
+//                    fill("#dedeff"); // Whites
+//                    row = y - (4 * scale); // 4
+//                    rect(x - (3 * scale), row, 2 * scale, scale);
+//                    rect(x + (3 * scale), row, 2 * scale, scale);
+//                    row += scale; // 5
+//                    rect(x - (4 * scale), row, 4 * scale, 3 * scale);
+//                    rect(x + (2 * scale), row, 4 * scale, 3 * scale);
+//                    row += (3 * scale);
+//                    rect(x - (3 * scale), row, 2 * scale, scale);
+//                    rect(x + (3 * scale), row, 2 * scale, scale);
+//                    fill("#2121ff"); // Pupils
+//                    row = y - (2 * scale); // 5
+//                    rect(x - (2 * scale), row, 2 * scale, 2 * scale);
+//                    rect(x + (4 * scale), row, 2 * scale, 2 * scale);
+//                }
+//                if(direction === "LEFT"){
+//                    fill("#dedeff"); // Whites
+//                    row = y - (4 * scale); // 4
+//                    rect(x - (5 * scale), row, 2 * scale, scale);
+//                    rect(x + scale, row, 2 * scale, scale);
+//                    row += scale; // 5
+//                    rect(x - (6 * scale), row, 4 * scale, 3 * scale);
+//                    rect(x, row, 4 * scale, 3 * scale);
+//                    row += (3 * scale);
+//                    rect(x - (5 * scale), row, 2 * scale, scale);
+//                    rect(x + scale, row, 2 * scale, scale);
+//                    fill("#2121ff"); // Pupils
+//                    row = y - (2 * scale); // 5
+//                    rect(x - (6 * scale), row, 2 * scale, 2 * scale);
+//                    rect(x , row, 2 * scale, 2 * scale);
+//                }
+//                if(direction === "DOWN"){
+//                    fill("#dedeff"); // Whites
+//                    row = y - (3 * scale); // 4
+//                    rect(x - (4 * scale), row, 2 * scale, scale);
+//                    rect(x + (2 * scale), row, 2 * scale, scale);
+//                    row += scale; // 5
+//                    rect(x - (5 * scale), row, 4 * scale, 3 * scale);
+//                    rect(x + scale, row, 4 * scale, 3 * scale);
+//                    row += (3 * scale);
+//                    rect(x - (4 * scale), row, 2 * scale, scale);
+//                    rect(x + (2 * scale), row, 2 * scale, scale);
+//                    fill("#2121ff"); // Pupils
+//                    row = y; // 5
+//                    rect(x - (4 * scale), row, 2 * scale, 2 * scale);
+//                    rect(x + (2 * scale), row, 2 * scale, 2 * scale);
+//                }
+//                if(direction === "UP"){
+//                    fill("#dedeff"); // Whites
+//                    row = y - (6 * scale); // 4
+//                    rect(x - (4 * scale), row, 2 * scale, scale);
+//                    rect(x + (2 * scale), row, 2 * scale, scale);
+//                    row += scale; // 5
+//                    rect(x - (5 * scale), row, 4 * scale, 3 * scale);
+//                    rect(x + scale, row, 4 * scale, 3 * scale);
+//                    row += (3 * scale);
+//                    rect(x - (4 * scale), row, 2 * scale, scale);
+//                    rect(x + (2 * scale), row, 2 * scale, scale);
+//                    fill("#2121ff"); // Pupils
+//                    row = y - (6 * scale); // 5
+//                    rect(x - (4 * scale), row, 2 * scale, 2 * scale);
+//                    rect(x + (2 * scale), row, 2 * scale, 2 * scale);
+//                }
 
 
 

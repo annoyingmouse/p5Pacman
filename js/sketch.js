@@ -7,7 +7,7 @@ let Clyde = null; // #ffb851/#2121ff
 const scale = 15;
 const offsetX = 45;
 const offsetY = 15;
-let frames = 30;
+let frames = 20;
 function setup() {
     createCanvas(600, 400);
     angleMode(DEGREES);

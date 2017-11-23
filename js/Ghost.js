@@ -2,8 +2,9 @@ class Ghost{
     constructor(offsetX, offsetY, scale, name){
         this.odd = 0;
         this.direction = "RIGHT";
-        this.r = scale/2;
-        switch (name) {
+        this.scale = scale;
+        this.name = name;
+        switch (this.name) {
             case "BLINKY":
                 this.colour = "#ff0000";
                 this.x = (scale * 13) + offsetX;
@@ -26,110 +27,146 @@ class Ghost{
                 break;
         }
     }
-    draw() {
-        const x = this.x - this.r;
-        const y = this.y - this.r;
+    drawBody(x, y, colour, odd){
         noStroke();
-        fill(this.colour); // Body
-        let row = y - 7;
-        rect(x - 2, row, 4, 1);
-        row++;
-        rect(x - 4, row, 8, 1);
-        row++;
-        rect(x - 5, row, 10, 1);
-        row++;
-        rect(x - 6, row, 12, 3);
-        row += 3;
-        rect(x - 7, row, 14, 6);
-        row += 6;
-        if (this.odd < 0) {
-            rect(x - 7, row, 2, 1);
-            rect(x - 4, row, 3, 1);
-            rect(x + 1, row, 3, 1);
-            rect(x + 5, row, 2, 1);
-        } else {
-            rect(x - 7, row, 4, 1);
-            rect(x - 2, row, 4, 1);
-            rect(x + 3, row, 4, 1);
+        fill(colour);
+        beginShape();
+        vertex(x, y);
+        vertex(x, y-8);
+        vertex(x+1, y-8);
+        vertex(x+1, y-11);
+        vertex(x+2, y-11);
+        vertex(x+2, y-12);
+        vertex(x+3, y-12);
+        vertex(x+3, y-13);
+        vertex(x+5, y-13);
+        vertex(x+5, y-14);
+        vertex(x+9, y-14);
+        vertex(x+9, y-13);
+        vertex(x+11, y-13);
+        vertex(x+11, y-12);
+        vertex(x+12, y-12);
+        vertex(x+12, y-11);
+        vertex(x+13, y-11);
+        vertex(x+13, y-8);
+        vertex(x+14, y-8);
+        vertex(x+14, y);
+        if(odd < 0){
+            vertex(x+13, y );
+            vertex(x+13, y-1 );
+            vertex(x+12, y-1 );
+            vertex(x+12, y-2 );
+            vertex(x+11, y-2 );
+            vertex(x+11, y-1 );
+            vertex(x+10, y-1 );
+            vertex(x+10, y);
+            vertex(x+8, y);
+            vertex(x+8, y-2);
+            vertex(x+6, y-2);
+            vertex(x+6, y);
+            vertex(x+4, y);
+            vertex(x+4, y-1);
+            vertex(x+3, y-1);
+            vertex(x+3, y-2);
+            vertex(x+2, y-2);
+            vertex(x+2, y-1);
+            vertex(x+1, y-1);
+            vertex(x+1, y);
+        }else{
+            vertex(x+11, y);
+            vertex(x+11, y-1);
+            vertex(x+10, y-1);
+            vertex(x+10, y-2);
+            vertex(x+9, y-2);
+            vertex(x+9, y-1);
+            vertex(x+8, y-1);
+            vertex(x+8, y);
+            vertex(x+6, y);
+            vertex(x+6, y-1);
+            vertex(x+5, y-1);
+            vertex(x+5, y-2);
+            vertex(x+4, y-2);
+            vertex(x+4, y-1);
+            vertex(x+3, y-1);
+            vertex(x+3, y);
         }
-        row++;
-        if (this.odd < 0) {
-            rect(x - 7, row, 1, 1);
-            rect(x - 3, row, 2, 1);
-            rect(x + 1, row, 2, 1);
-            rect(x + 6, row, 1, 1);
-        } else {
-            rect(x - 7, row, 3, 1);
-            rect(x - 1, row, 2, 1);
-            rect(x + 4, row, 3, 1);
+        endShape(CLOSE);
+    }
+    drawEye(x, y, direction){
+        let whiteX = null,
+            whiteY = null,
+            pupilX = null,
+            pupilY = null;
+        if(direction === "LEFT"){
+            whiteX = 0;
+            whiteY = 0;
+            pupilX = 0;
+            pupilY = 0;
         }
-        if(this.direction === "RIGHT"){
-            fill("#dedeff");
-            row = y - 4;
-            rect(x - 3, row, 2, 1);
-            rect(x + 3, row, 2, 1);
-            row++; // 5
-            rect(x - 4, row, 4, 3);
-            rect(x + 2, row, 4, 3);
-            row += 3;
-            rect(x - 3, row, 2, 1);
-            rect(x + 3, row, 2, 1);
-            fill("#2121ff"); // Pupils
-            row = y - 2; // 5
-            rect(x - 2, row, 2, 2);
-            rect(x + 4, row, 2, 2);
+        if(direction === "RIGHT"){
+            whiteX = 2;
+            whiteY = 0;
+            pupilX = 4;
+            pupilY = 0;
         }
-        if(this.direction === "LEFT"){
-            fill("#dedeff"); // Whites
-            row = y - 4; // 4
-            rect(x - 5, row, 2, 1);
-            rect(x + 1, row, 2, 1);
-            row += 1; // 5
-            rect(x - 6, row, 4, 3);
-            rect(x, row, 4, 3);
-            row += 3;
-            rect(x - 5, row, 2, 1);
-            rect(x + 1, row, 2, 1);
-            fill("#2121ff"); // Pupils
-            row = y - 2; // 5
-            rect(x - 6, row, 2, 2);
-            rect(x, row, 2, 2);
+        if(direction === "UP"){
+            whiteX = 1;
+            whiteY = -2;
+            pupilX = 2;
+            pupilY = -4;
         }
-        if(this.direction === "DOWN"){
-            fill("#dedeff"); // Whites
-            row = y - 3; // 4
-            rect(x - 4, row, 2, 1);
-            rect(x + 2, row, 2, 1);
-            row += 1; // 5
-            rect(x - 5, row, 4, 3);
-            rect(x + 1, row, 4, 3);
-            row += 3;
-            rect(x - 4, row, 2, 1);
-            rect(x + 2, row, 2, 1);
-            fill("#2121ff"); // Pupils
-            row = y; // 5
-            rect(x - 4, row, 2, 2);
-            rect(x + 2, row, 2, 2);
+        if(direction === "DOWN"){
+            whiteX = 1;
+            whiteY = 1;
+            pupilX = 2;
+            pupilY = 2;
         }
-        if(this.direction === "UP"){
-            fill("#dedeff"); // Whites
-            row = y - 6; // 4
-            rect(x - 4, row, 2, 1);
-            rect(x + 2, row, 2, 1);
-            row += 1; // 5
-            rect(x - 5, row, 4, 3);
-            rect(x + 1, row, 4, 3);
-            row += 3;
-            rect(x - 4, row, 2, 1);
-            rect(x + 2, row, 2, 1);
-            fill("#2121ff"); // Pupils
-            row = y - 6; // 5
-            rect(x - 4, row, 2, 2);
-            rect(x + 2, row, 2, 2);
-        }
+        fill("#dedeff");
+        beginShape();
+        vertex(x+1+whiteX, y-7+whiteY);
+        vertex(x+1+whiteX, y-10+whiteY);
+        vertex(x+2+whiteX, y-10+whiteY);
+        vertex(x+2+whiteX, y-11+whiteY);
+        vertex(x+4+whiteX, y-11+whiteY);
+        vertex(x+4+whiteX, y-10+whiteY);
+        vertex(x+5+whiteX, y-10+whiteY);
+        vertex(x+5+whiteX, y-7+whiteY);
+        vertex(x+4+whiteX, y-7+whiteY);
+        vertex(x+4+whiteX, y-6+whiteY);
+        vertex(x+2+whiteX, y-6+whiteY);
+        vertex(x+2+whiteX, y-7+whiteY);
+        endShape(CLOSE);
+        beginShape();
+        vertex(x+7+whiteX, y-7+whiteY);
+        vertex(x+7+whiteX, y-10+whiteY);
+        vertex(x+8+whiteX, y-10+whiteY);
+        vertex(x+8+whiteX, y-11+whiteY);
+        vertex(x+10+whiteX, y-11+whiteY);
+        vertex(x+10+whiteX, y-10+whiteY);
+        vertex(x+11+whiteX, y-10+whiteY);
+        vertex(x+11+whiteX, y-7+whiteY);
+        vertex(x+10+whiteX, y-7+whiteY);
+        vertex(x+10+whiteX, y-6+whiteY);
+        vertex(x+8+whiteX, y-6+whiteY);
+        vertex(x+8+whiteX, y-7+whiteY);
+        endShape(CLOSE);
+        fill("#2121ff");
+        rect(x+1+pupilX, y-9+pupilY, 2, 2);
+        rect(x+7+pupilX, y-9+pupilY, 2, 2);
+    }
+
+    draw() {
+        const x = this.x - this.scale + 1;
+        const y = this.y;
+        this.drawBody(x, y, this.colour, this.odd);
+        this.drawEye(x, y, this.direction);
         this.odd++;
         if(this.odd === 5){
+            console.log(this.name, this.x, this.y);
             this.odd = -5;
+        }
+        if (!(this.x % (this.scale/2)) && !(this.y % (this.scale/2))) {
+
         }
     }
 }
