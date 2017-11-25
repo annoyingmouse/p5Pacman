@@ -1,5 +1,6 @@
 let pacman = null;
 let field = null;
+const Ghosts = [];
 let Blinky = null; // #ff0000/#2121ff
 let Pinky = null; // #ffb8ff/#2121ff
 let Inky = null; // #00ffff/#2121ff
@@ -13,10 +14,10 @@ function setup() {
     angleMode(DEGREES);
     frameRate(frames);
     pacman = new Pacman(offsetX, offsetY, scale);
-    Blinky = new Ghost(offsetX, offsetY, scale, "BLINKY");
-    Pinky = new Ghost(offsetX, offsetY, scale, "PINKY");
-    Inky = new Ghost(offsetX, offsetY, scale, "INKY");
-    Clyde = new Ghost(offsetX, offsetY, scale, "CLYDE");
+    Ghosts.push(new Ghost(offsetX, offsetY, scale, "BLINKY"));
+    Ghosts.push(new Ghost(offsetX, offsetY, scale, "PINKY"));
+    Ghosts.push(new Ghost(offsetX, offsetY, scale, "INKY"));
+    Ghosts.push(new Ghost(offsetX, offsetY, scale, "CLYDE"));
 
     field = new Field(offsetX, offsetY, `
 ╔════════════╦════════════╗
@@ -46,10 +47,7 @@ function draw() {
     background("#030002");
     field.draw();
     pacman.draw();
-    Blinky.draw();
-    Pinky.draw();
-    Inky.draw();
-    Clyde.draw();
+    Ghosts.forEach(ghost => ghost.draw());
 }
 function keyPressed() {
     if (keyCode === UP_ARROW) {
