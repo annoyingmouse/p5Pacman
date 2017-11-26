@@ -26,7 +26,6 @@ class Field {
     ask(x, y) {
         return this.permittedRoutes.find((el) => el.x === x && el.y === y);
     }
-
     portal() {
         return this.portals;
     }
@@ -89,6 +88,7 @@ class Field {
                 this.permittedRoutes.push(directions);
             });
         });
+        console.log(this.permittedRoutes);
     }
 
     generateDots() {

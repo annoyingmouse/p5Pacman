@@ -100,7 +100,6 @@ class Pacman {
         }
         this.x = this.x + this.speed[0];
         this.y = this.y + this.speed[1];
-
     }
 
     dir(DIR) {

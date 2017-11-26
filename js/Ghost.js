@@ -1,29 +1,37 @@
 class Ghost {
     constructor(offsetX, offsetY, scale, name) {
         this.odd = 0;
-        this.direction = "RIGHT";
         this.scale = scale;
         this.name = name;
+        this.speed = [0, 0];
         switch (this.name) {
             case "BLINKY":
                 this.colour = "#ff0000";
                 this.x = (scale * 12) + offsetX;
                 this.y = (scale * 11) + offsetY;
+                this.direction = "RIGHT";
+                this.intention = ["RIGHT", "UP", "LEFT"];
                 break;
             case "PINKY":
                 this.colour = "#ffb8ff";
                 this.x = (scale * 16) + offsetX;
                 this.y = (scale * 11) + offsetY;
+                this.direction = "LEFT";
+                this.intention = ["LEFT", "UP", "RIGHT"];
                 break;
             case "INKY":
                 this.colour = "#00ffff";
                 this.x = (scale * 12) + offsetX;
                 this.y = (scale * 13) + offsetY;
+                this.direction = "RIGHT";
+                this.intention = ["RIGHT", "UP", "UP", "RIGHT"];
                 break;
             case "CLYDE":
                 this.colour = "#ffb851";
                 this.x = (scale * 16) + offsetX;
                 this.y = (scale * 13) + offsetY;
+                this.direction = "LEFT";
+                this.intention = ["LEFT", "UP", "UP", "LEFT"];
                 break;
         }
         this.Body = [[0, 0], [0, -8], [1, -8], [1, -11], [2, -11], [2, -12], [3, -12], [3, -13], [5, -13], [5, -14], [9, -14], [9, -13], [11, -13], [11, -12], [12, -12], [12, -11], [13, -11], [13, -8], [14, -8], [14, 0]];
@@ -37,6 +45,7 @@ class Ghost {
             "UP": [1, -2, 2, -4],
             "DOWN": [1, 1, 2, 2]
         };
+        this.path = field.ask(this.x + (scale / 2), this.y - (scale / 2)).allowed;
     }
 
     draw() {
@@ -64,8 +73,59 @@ class Ghost {
         if (this.odd === 5) {
             this.odd = -5;
         }
+        this.update();
         if (!(this.x % (this.scale / 2)) && !(this.y % (this.scale / 2))) {
+            if(this.intention.length){
+                this.direction = this.intention.shift();
+                console.log(this.direction);
+            }else{
+                const halfScale = this.scale / 2;
+                const possibleDirections = field.ask(this.x+halfScale, this.y-halfScale).allowed;
+                if(this.path.length === possibleDirections.length && this.path.every(el => possibleDirections.includes(el))){
+                    console.log("Nothing to see here")
+                }else{
+                    this.direction = possibleDirections[Math.floor(Math.random() * (possibleDirections.length-1 - 0 + 1)) + 0];
+                }
+            }
+            switch (this.direction) {
+                case "UP":
+                    this.speed = [0, -1];
+                    break;
+                case "DOWN":
+                    this.speed = [0, 1];
+                    break;
+                case "RIGHT":
+                    this.speed = [1, 0];
+                    break;
+                case "LEFT":
+                    this.speed = [-1, 0];
+                    break;
+            }
 
+
+
+            // switch (this.direction) {
+            //     case "UP":
+            //         this.speed = [0, -1];
+            //         break;
+            //     case "DOWN":
+            //         this.speed = [0, 1];
+            //         break;
+            //     case "RIGHT":
+            //         this.speed = [1, 0];
+            //         break;
+            //     case "LEFT":
+            //         this.speed = [-1, 0];
+            //         break;
+            // }
         }
+        this.update();
+    }
+    update(){
+
+
+
+        this.x = this.x + this.speed[0];
+        this.y = this.y + this.speed[1];
     }
 }

@@ -8,17 +8,12 @@ let Clyde = null; // #ffb851/#2121ff
 const scale = 15;
 const offsetX = 45;
 const offsetY = 15;
-let frames = 20;
+let frames = 10;
 function setup() {
     createCanvas(600, 400);
     angleMode(DEGREES);
     frameRate(frames);
     pacman = new Pacman(offsetX, offsetY, scale);
-    Ghosts.push(new Ghost(offsetX, offsetY, scale, "BLINKY"));
-    Ghosts.push(new Ghost(offsetX, offsetY, scale, "PINKY"));
-    Ghosts.push(new Ghost(offsetX, offsetY, scale, "INKY"));
-    Ghosts.push(new Ghost(offsetX, offsetY, scale, "CLYDE"));
-
     field = new Field(offsetX, offsetY, `
 ╔════════════╦════════════╗
 ║••••••••••••║••••••••••••║
@@ -42,6 +37,10 @@ X      •  ║     ║  •      X
 ║•••••••••••••••••••••••••║
 ╚═════════════════════════╝
 `, scale);
+    Ghosts.push(new Ghost(offsetX, offsetY, scale, "BLINKY"));
+    // Ghosts.push(new Ghost(offsetX, offsetY, scale, "PINKY"));
+    // Ghosts.push(new Ghost(offsetX, offsetY, scale, "INKY"));
+    // Ghosts.push(new Ghost(offsetX, offsetY, scale, "CLYDE"));
 }
 function draw() {
     background("#030002");
