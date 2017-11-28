@@ -88,7 +88,6 @@ class Field {
                 this.permittedRoutes.push(directions);
             });
         });
-        console.log(this.permittedRoutes);
     }
 
     generateDots() {

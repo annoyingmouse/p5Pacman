@@ -37,6 +37,10 @@ class Pacman {
         this.update();
     }
 
+    frames(){
+        return this.frames;
+    }
+
     update() {
         if (this.frames) {
             let speedup = frames + this.frames;

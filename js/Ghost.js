@@ -10,7 +10,7 @@ class Ghost {
                 this.x = (scale * 12) + offsetX;
                 this.y = (scale * 11) + offsetY;
                 this.direction = "RIGHT";
-                this.intention = ["RIGHT", "UP", "LEFT"];
+                this.intention = ["RIGHT", "RIGHT", "UP", "UP", "LEFT"];
                 break;
             case "PINKY":
                 this.colour = "#ffb8ff";
@@ -50,7 +50,7 @@ class Ghost {
 
     draw() {
         noStroke();
-        fill(this.colour);
+        fill((pacman.frames) ? "#233e8b" : this.colour);
         beginShape();
         this.Body.forEach((p) => vertex((this.x + p[0]), (this.y + p[1])));
         if (this.odd < 0) {
@@ -59,32 +59,68 @@ class Ghost {
             this.LegsEven.forEach((p) => vertex((this.x + p[0]), (this.y + p[1])));
         }
         endShape(CLOSE);
-        fill("#dedeff");
-        beginShape();
-        this.LeftEye.forEach((p) => vertex(this.x + p[0] + this.Eyes[this.direction][0], this.y + p[1] + this.Eyes[this.direction][1]));
-        endShape(CLOSE);
-        beginShape();
-        this.RightEye.forEach((p) => vertex(this.x + p[0] + this.Eyes[this.direction][0], this.y + p[1] + this.Eyes[this.direction][1]));
-        endShape(CLOSE);
-        fill("#2121ff");
-        rect(this.x + 1 + this.Eyes[this.direction][2], this.y - 9 + this.Eyes[this.direction][3], 2, 2);
-        rect(this.x + 7 + this.Eyes[this.direction][2], this.y - 9 + this.Eyes[this.direction][3], 2, 2);
-        this.odd++;
-        if (this.odd === 5) {
-            this.odd = -5;
+        if(pacman.frames){
+            fill("#f1bd8b");
+            rect(this.x + 1 + this.Eyes["DOWN"][2], this.y - 9 + this.Eyes["DOWN"][3], 2, 2);
+            rect(this.x + 7 + this.Eyes["DOWN"][2], this.y - 9 + this.Eyes["DOWN"][3], 2, 2);
+
+
+        }else{
+            fill("#dedeff");
+            beginShape();
+            this.LeftEye.forEach((p) => vertex(this.x + p[0] + this.Eyes[this.direction][0], this.y + p[1] + this.Eyes[this.direction][1]));
+            endShape(CLOSE);
+            beginShape();
+            this.RightEye.forEach((p) => vertex(this.x + p[0] + this.Eyes[this.direction][0], this.y + p[1] + this.Eyes[this.direction][1]));
+            endShape(CLOSE);
+            fill("#2121ff");
+            rect(this.x + 1 + this.Eyes[this.direction][2], this.y - 9 + this.Eyes[this.direction][3], 2, 2);
+            rect(this.x + 7 + this.Eyes[this.direction][2], this.y - 9 + this.Eyes[this.direction][3], 2, 2);
+            this.odd++;
+            if (this.odd === 5) {
+                this.odd = -5;
+            }
         }
         this.update();
+    }
+
+    update() {
         if (!(this.x % (this.scale / 2)) && !(this.y % (this.scale / 2))) {
-            if(this.intention.length){
-                this.direction = this.intention.shift();
-                console.log(this.direction);
+            const portals = field.portal();
+            const portalIndex = portals.findIndex((el) => el[0] === this.x && el[1] === this.y);
+            if (!!~portalIndex) {
+                const exitPortal = portals[Number(!portalIndex)];
+                this.x = exitPortal[0];
+                this.y = exitPortal[1];
             }else{
-                const halfScale = this.scale / 2;
-                const possibleDirections = field.ask(this.x+halfScale, this.y-halfScale).allowed;
-                if(this.path.length === possibleDirections.length && this.path.every(el => possibleDirections.includes(el))){
-                    console.log("Nothing to see here")
-                }else{
-                    this.direction = possibleDirections[Math.floor(Math.random() * (possibleDirections.length-1 - 0 + 1)) + 0];
+                if (this.intention.length) {
+                    this.direction = this.intention.shift();
+                } else {
+                    const halfScale = this.scale / 2;
+                    const possibleDirections = field.ask(this.x + halfScale, this.y - halfScale).allowed;
+                    switch (this.direction) {
+                        case "RIGHT":
+                            if (!!~possibleDirections.indexOf("LEFT")) {
+                                possibleDirections.splice(possibleDirections.indexOf("LEFT"), 1);
+                            }
+                            break;
+                        case "LEFT":
+                            if (!!~possibleDirections.indexOf("RIGHT")) {
+                                possibleDirections.splice(possibleDirections.indexOf("RIGHT"), 1);
+                            }
+                            break;
+                        case "UP":
+                            if (!!~possibleDirections.indexOf("DOWN")) {
+                                possibleDirections.splice(possibleDirections.indexOf("DOWN"), 1);
+                            }
+                            break;
+                        case "DOWN":
+                            if (!!~possibleDirections.indexOf("UP")) {
+                                possibleDirections.splice(possibleDirections.indexOf("UP"), 1);
+                            }
+                            break;
+                    }
+                    this.direction = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
                 }
             }
             switch (this.direction) {
@@ -101,30 +137,7 @@ class Ghost {
                     this.speed = [-1, 0];
                     break;
             }
-
-
-
-            // switch (this.direction) {
-            //     case "UP":
-            //         this.speed = [0, -1];
-            //         break;
-            //     case "DOWN":
-            //         this.speed = [0, 1];
-            //         break;
-            //     case "RIGHT":
-            //         this.speed = [1, 0];
-            //         break;
-            //     case "LEFT":
-            //         this.speed = [-1, 0];
-            //         break;
-            // }
         }
-        this.update();
-    }
-    update(){
-
-
-
         this.x = this.x + this.speed[0];
         this.y = this.y + this.speed[1];
     }
