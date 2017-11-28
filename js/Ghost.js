@@ -17,21 +17,21 @@ class Ghost {
                 this.x = (scale * 16) + offsetX;
                 this.y = (scale * 11) + offsetY;
                 this.direction = "LEFT";
-                this.intention = ["LEFT", "UP", "RIGHT"];
+                this.intention = ["LEFT", "LEFT", "UP", "UP", "RIGHT"];
                 break;
             case "INKY":
                 this.colour = "#00ffff";
                 this.x = (scale * 12) + offsetX;
                 this.y = (scale * 13) + offsetY;
                 this.direction = "RIGHT";
-                this.intention = ["RIGHT", "UP", "UP", "RIGHT"];
+                this.intention = ["RIGHT", "RIGHT", "UP", "UP", "UP", "UP", "RIGHT"];
                 break;
             case "CLYDE":
                 this.colour = "#ffb851";
                 this.x = (scale * 16) + offsetX;
                 this.y = (scale * 13) + offsetY;
                 this.direction = "LEFT";
-                this.intention = ["LEFT", "UP", "UP", "LEFT"];
+                this.intention = ["LEFT", "LEFT", "UP", "UP", "UP", "UP", "LEFT"];
                 break;
         }
         this.Body = [[0, 0], [0, -8], [1, -8], [1, -11], [2, -11], [2, -12], [3, -12], [3, -13], [5, -13], [5, -14], [9, -14], [9, -13], [11, -13], [11, -12], [12, -12], [12, -11], [13, -11], [13, -8], [14, -8], [14, 0]];
@@ -61,10 +61,15 @@ class Ghost {
         endShape(CLOSE);
         if(pacman.frames){
             fill("#f1bd8b");
-            rect(this.x + 1 + this.Eyes["DOWN"][2], this.y - 9 + this.Eyes["DOWN"][3], 2, 2);
-            rect(this.x + 7 + this.Eyes["DOWN"][2], this.y - 9 + this.Eyes["DOWN"][3], 2, 2);
-
-
+            rect(this.x + 4, this.y - 9, 2, 2);
+            rect(this.x + 8, this.y - 9, 2, 2);
+            rect(this.x + 2, this.y - 5, 2, 1);
+            rect(this.x + 6, this.y - 5, 2, 1);
+            rect(this.x + 10, this.y - 5, 2, 1);
+            rect(this.x + 1, this.y - 4, 1, 1);
+            rect(this.x + 4, this.y - 4, 2, 1);
+            rect(this.x + 8, this.y - 4, 2, 1);
+            rect(this.x + 12, this.y - 4, 1, 1);
         }else{
             fill("#dedeff");
             beginShape();
@@ -85,19 +90,23 @@ class Ghost {
     }
 
     update() {
-        if (!(this.x % (this.scale / 2)) && !(this.y % (this.scale / 2))) {
+        const halfScale = this.scale / 2;
+        if (!(this.x % halfScale) && !(this.y % halfScale)) {
             const portals = field.portal();
-            const portalIndex = portals.findIndex((el) => el[0] === this.x && el[1] === this.y);
+            const portalIndex = portals.findIndex((el) => el[0] === this.x + halfScale && el[1] === this.y - halfScale);
             if (!!~portalIndex) {
                 const exitPortal = portals[Number(!portalIndex)];
-                this.x = exitPortal[0];
-                this.y = exitPortal[1];
+                this.x = exitPortal[0] - halfScale;
+                this.y = exitPortal[1] + halfScale;
             }else{
                 if (this.intention.length) {
                     this.direction = this.intention.shift();
                 } else {
-                    const halfScale = this.scale / 2;
                     const possibleDirections = field.ask(this.x + halfScale, this.y - halfScale).allowed;
+                    if(this.x === 255 && this.y === 165){
+                        console.log("Removing DOWN as an option");
+                        possibleDirections.splice(possibleDirections.indexOf("DOWN"), 1);
+                    }
                     switch (this.direction) {
                         case "RIGHT":
                             if (!!~possibleDirections.indexOf("LEFT")) {
